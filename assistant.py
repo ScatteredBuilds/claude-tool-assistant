@@ -15,7 +15,7 @@ from schemas import AssistantResult
 from tools import classify_risk
 
 
-DEFAULT_MODEL = "claude-3-5-haiku-20241022"
+DEFAULT_MODEL = "claude-sonnet-4-20250514"
 MAX_RETRIES = 2
 
 RISK_TOOL = {
@@ -140,7 +140,8 @@ def run_tool_flow(client: Anthropic, user_request: str, model: str) -> tuple[Any
                 "role": "user",
                 "content": (
                     "Return only JSON with keys: summary, risk_level, reasoning, tool_used. "
-                    "Use the tool result for risk_level and reasoning."
+                    "Use the tool result for risk_level and reasoning. "
+                    "tool_used must be the boolean value true or false, not the tool name."
                 ),
             },
         ],
