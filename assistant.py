@@ -55,6 +55,10 @@ def response_to_dict(response: Any) -> dict:
     return json.loads(response.json())
 
 
+def content_blocks_to_dicts(blocks: list[Any]) -> list[dict[str, Any]]:
+    return [block.model_dump() if hasattr(block, "model_dump") else dict(block) for block in blocks]
+
+
 def save_raw_response(response: Any, output_dir: str = "outputs") -> str:
     Path(output_dir).mkdir(parents=True, exist_ok=True)
     timestamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
@@ -130,7 +134,7 @@ def run_tool_flow(client: Anthropic, user_request: str) -> tuple[Any, str, bool]
                     f"an incident or operational risk:\n\n{user_request}"
                 ),
             },
-            {"role": "assistant", "content": first_response.content},
+            {"role": "assistant", "content": content_blocks_to_dicts(first_response.content)},
             {"role": "user", "content": followup_content},
             {
                 "role": "user",
