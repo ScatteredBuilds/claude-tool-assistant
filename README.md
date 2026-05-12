@@ -77,12 +77,13 @@ python assistant.py "Summarize this incident note and classify the risk level: d
 
 ## Verification status
 
-- `python3 -m py_compile assistant.py tools.py schemas.py logger.py` passes locally.
+- `.venv/bin/python -m py_compile assistant.py tools.py schemas.py logger.py` passes locally.
 - `evals/sample_inputs.json` is valid JSON.
-- Claude API runtime verification is pending because `ANTHROPIC_API_KEY` is not set in this environment.
+- Claude API runtime was verified locally with `claude-sonnet-4-20250514`.
+- Verified runtime output is recorded in `outputs/example_run.md`.
 
 ## Next milestones
 
 1. Add a tiny eval runner for `evals/sample_inputs.json`.
-2. Record one verified run if `ANTHROPIC_API_KEY` is available.
-3. Improve structured-output prompting if malformed JSON appears in real runs.
+2. Improve structured-output prompting if malformed JSON appears in real runs.
+3. Track model deprecation warnings and update the default model when needed.
