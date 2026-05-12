@@ -15,7 +15,7 @@ from schemas import AssistantResult
 from tools import classify_risk
 
 
-MODEL = "claude-3-5-haiku-latest"
+DEFAULT_MODEL = "claude-3-5-haiku-20241022"
 MAX_RETRIES = 2
 
 RISK_TOOL = {
@@ -83,10 +83,10 @@ def extract_json(text: str) -> dict:
     return json.loads(cleaned)
 
 
-def run_tool_flow(client: Anthropic, user_request: str) -> tuple[Any, str, bool]:
+def run_tool_flow(client: Anthropic, user_request: str, model: str) -> tuple[Any, str, bool]:
     first_response = call_with_retries(
         client,
-        model=MODEL,
+        model=model,
         max_tokens=500,
         tools=[RISK_TOOL],
         messages=[
@@ -124,7 +124,7 @@ def run_tool_flow(client: Anthropic, user_request: str) -> tuple[Any, str, bool]
 
     final_response = call_with_retries(
         client,
-        model=MODEL,
+        model=model,
         max_tokens=700,
         messages=[
             {
@@ -156,6 +156,7 @@ def main() -> None:
 
     load_dotenv()
     api_key = os.getenv("ANTHROPIC_API_KEY")
+    model = os.getenv("ANTHROPIC_MODEL", DEFAULT_MODEL)
     if not api_key:
         message = "ANTHROPIC_API_KEY is not set. Copy .env.example to .env and add a key."
         write_log(args.request, tool_used=False, error=message)
@@ -166,7 +167,7 @@ def main() -> None:
     tool_used = False
 
     try:
-        response, _tool_result, tool_used = run_tool_flow(client, args.request)
+        response, _tool_result, tool_used = run_tool_flow(client, args.request, model)
         raw_response_path = save_raw_response(response)
 
         data = extract_json(get_text_block(response))
