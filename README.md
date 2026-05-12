@@ -49,6 +49,22 @@ ANTHROPIC_MODEL=claude-sonnet-4-20250514
 
 Do not commit `.env`.
 
+## Model fallback
+
+Anthropic model availability can vary by account, region, and model lifecycle. A model ID that works in one account may return `NotFoundError` in another.
+
+The assistant tries models in this order:
+
+1. `ANTHROPIC_MODEL`, if set
+2. `claude-sonnet-4-20250514`
+3. `claude-3-7-sonnet-20250219`
+4. `claude-3-5-sonnet-20241022`
+5. `claude-3-haiku-20240307`
+
+If a model returns `NotFoundError`, the assistant records that model in the run log and tries the next candidate. On success, it prints the selected model before the structured result.
+
+A verified fallback example is recorded in `outputs/model_fallback_example.md`.
+
 ## Example command
 
 ```bash
@@ -81,6 +97,7 @@ python assistant.py "Summarize this incident note and classify the risk level: d
 - `evals/sample_inputs.json` is valid JSON.
 - Claude API runtime was verified locally with `claude-sonnet-4-20250514`.
 - Verified runtime output is recorded in `outputs/example_run.md`.
+- Model fallback behavior was verified locally with an unavailable configured model. Output is recorded in `outputs/model_fallback_example.md`.
 
 ## Next milestones
 
