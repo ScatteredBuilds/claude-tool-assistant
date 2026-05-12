@@ -1,0 +1,22 @@
+[
+  {
+    "case": "low risk",
+    "prompt": "Summarize this incident note and classify the risk level: docs page typo reported by one internal user."
+  },
+  {
+    "case": "medium risk",
+    "prompt": "Summarize this incident note and classify the risk level: database latency increased during checkout."
+  },
+  {
+    "case": "high risk",
+    "prompt": "Summarize this incident note and classify the risk level: checkout down and payments failed for multiple customers."
+  },
+  {
+    "case": "ambiguous input",
+    "prompt": "Summarize this incident note and classify the risk level: something feels slower than usual."
+  },
+  {
+    "case": "irrelevant input",
+    "prompt": "Summarize this incident note and classify the risk level: what is a transformer attention head?"
+  }
+]
