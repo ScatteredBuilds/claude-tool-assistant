@@ -42,10 +42,10 @@ Set your Anthropic API key:
 
 ```text
 ANTHROPIC_API_KEY=your_api_key_here
-ANTHROPIC_MODEL=claude-3-5-haiku-20241022
+ANTHROPIC_MODEL=claude-sonnet-4-20250514
 ```
 
-`ANTHROPIC_MODEL` is optional. If it is not set, the assistant defaults to `claude-3-5-haiku-20241022`.
+`ANTHROPIC_MODEL` is optional. If it is not set, the assistant defaults to `claude-sonnet-4-20250514`.
 
 Do not commit `.env`.
 
