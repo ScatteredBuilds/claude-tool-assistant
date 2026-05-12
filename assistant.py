@@ -6,7 +6,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from anthropic import Anthropic
+from anthropic import Anthropic, NotFoundError
 from dotenv import load_dotenv
 from pydantic import ValidationError
 
@@ -16,6 +16,12 @@ from tools import classify_risk
 
 
 DEFAULT_MODEL = "claude-sonnet-4-20250514"
+FALLBACK_MODELS = [
+    "claude-sonnet-4-20250514",
+    "claude-3-7-sonnet-20250219",
+    "claude-3-5-sonnet-20241022",
+    "claude-3-haiku-20240307",
+]
 MAX_RETRIES = 2
 
 RISK_TOOL = {
@@ -34,12 +40,22 @@ RISK_TOOL = {
 }
 
 
+class ModelFallbackError(RuntimeError):
+    def __init__(self, failed_models: list[str]):
+        self.failed_models = failed_models
+        super().__init__(
+            f"No configured Anthropic models were available: {', '.join(failed_models)}"
+        )
+
+
 def call_with_retries(client: Anthropic, **kwargs: Any) -> Any:
     last_error = None
 
     for attempt in range(MAX_RETRIES + 1):
         try:
             return client.messages.create(**kwargs)
+        except NotFoundError:
+            raise
         except Exception as error:
             last_error = error
             if attempt == MAX_RETRIES:
@@ -81,6 +97,18 @@ def extract_json(text: str) -> dict:
         cleaned = cleaned.strip("`")
         cleaned = cleaned.removeprefix("json").strip()
     return json.loads(cleaned)
+
+
+def model_candidates(preferred_model: str | None) -> list[str]:
+    candidates = []
+    if preferred_model:
+        candidates.append(preferred_model)
+
+    for model in FALLBACK_MODELS:
+        if model not in candidates:
+            candidates.append(model)
+
+    return candidates
 
 
 def run_tool_flow(client: Anthropic, user_request: str, model: str) -> tuple[Any, str, bool]:
@@ -150,6 +178,23 @@ def run_tool_flow(client: Anthropic, user_request: str, model: str) -> tuple[Any
     return final_response, json.dumps(tool_result), True
 
 
+def run_with_model_fallback(
+    client: Anthropic,
+    user_request: str,
+    models: list[str],
+) -> tuple[Any, str, bool, str, list[str]]:
+    failed_models = []
+
+    for model in models:
+        try:
+            response, tool_result, tool_used = run_tool_flow(client, user_request, model)
+            return response, tool_result, tool_used, model, failed_models
+        except NotFoundError:
+            failed_models.append(model)
+
+    raise ModelFallbackError(failed_models)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run a small controlled Claude tool assistant.")
     parser.add_argument("request")
@@ -157,7 +202,7 @@ def main() -> None:
 
     load_dotenv()
     api_key = os.getenv("ANTHROPIC_API_KEY")
-    model = os.getenv("ANTHROPIC_MODEL", DEFAULT_MODEL)
+    preferred_model = os.getenv("ANTHROPIC_MODEL", DEFAULT_MODEL)
     if not api_key:
         message = "ANTHROPIC_API_KEY is not set. Copy .env.example to .env and add a key."
         write_log(args.request, tool_used=False, error=message)
@@ -166,22 +211,61 @@ def main() -> None:
     client = Anthropic(api_key=api_key)
     raw_response_path = None
     tool_used = False
+    selected_model = None
+    failed_models: list[str] = []
 
     try:
-        response, _tool_result, tool_used = run_tool_flow(client, args.request, model)
+        response, _tool_result, tool_used, selected_model, failed_models = run_with_model_fallback(
+            client,
+            args.request,
+            model_candidates(preferred_model),
+        )
         raw_response_path = save_raw_response(response)
 
         data = extract_json(get_text_block(response))
         data["raw_response_path"] = raw_response_path
         result = AssistantResult(**data)
 
+        if failed_models:
+            print(f"Failed models: {', '.join(failed_models)}")
+        print(f"Selected model: {selected_model}")
         print(result.model_dump_json(indent=2))
-        write_log(args.request, tool_used=tool_used, output_path=raw_response_path)
+        write_log(
+            args.request,
+            tool_used=tool_used,
+            output_path=raw_response_path,
+            selected_model=selected_model,
+            failed_models=failed_models,
+        )
     except (json.JSONDecodeError, ValidationError, ValueError) as error:
-        write_log(args.request, tool_used=tool_used, output_path=raw_response_path, error=str(error))
+        write_log(
+            args.request,
+            tool_used=tool_used,
+            output_path=raw_response_path,
+            error=str(error),
+            selected_model=selected_model,
+            failed_models=failed_models,
+        )
         raise SystemExit(f"Structured output error: {error}")
+    except ModelFallbackError as error:
+        write_log(
+            args.request,
+            tool_used=tool_used,
+            output_path=raw_response_path,
+            error=str(error),
+            selected_model=selected_model,
+            failed_models=error.failed_models,
+        )
+        raise
     except Exception as error:
-        write_log(args.request, tool_used=tool_used, output_path=raw_response_path, error=str(error))
+        write_log(
+            args.request,
+            tool_used=tool_used,
+            output_path=raw_response_path,
+            error=str(error),
+            selected_model=selected_model,
+            failed_models=failed_models,
+        )
         raise
 
 

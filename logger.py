@@ -9,6 +9,8 @@ def write_log(
     tool_used: bool,
     output_path: str | None = None,
     error: str | None = None,
+    selected_model: str | None = None,
+    failed_models: list[str] | None = None,
     log_dir: str = "logs",
 ) -> None:
     Path(log_dir).mkdir(parents=True, exist_ok=True)
@@ -19,6 +21,8 @@ def write_log(
         "input": user_input,
         "tool_used": tool_used,
         "output_path": output_path,
+        "selected_model": selected_model,
+        "failed_models": failed_models or [],
         "error": error,
     }
 
