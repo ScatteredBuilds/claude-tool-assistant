@@ -216,8 +216,9 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
-.env
-.venv/
+
+# Local project files
 .DS_Store
-logs/*.jsonl
+logs/*
+!logs/.gitkeep
 outputs/raw_response_*.json
