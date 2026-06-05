@@ -1,0 +1,97 @@
+{
+  "created_at": "2026-06-05T03:15:43.182480+00:00",
+  "input_file": "evals/sample_inputs.json",
+  "checks": [
+    "tool_execution",
+    "schema_validation",
+    "output_structure",
+    "no_failure"
+  ],
+  "cases": [
+    {
+      "case": "low risk",
+      "prompt": "Summarize this incident note and classify the risk level: docs page typo reported by one internal user.",
+      "status": "PASS",
+      "checks": {
+        "tool_execution": "PASS",
+        "schema_validation": "PASS",
+        "output_structure": "PASS",
+        "no_failure": "PASS"
+      },
+      "retries_required": false,
+      "failure_occurred": false,
+      "selected_model": "claude-sonnet-4-20250514",
+      "failed_models": [],
+      "raw_response_path": "outputs/raw_response_20260605T031547Z.json",
+      "error": null
+    },
+    {
+      "case": "medium risk",
+      "prompt": "Summarize this incident note and classify the risk level: database latency increased during checkout.",
+      "status": "PASS",
+      "checks": {
+        "tool_execution": "PASS",
+        "schema_validation": "PASS",
+        "output_structure": "PASS",
+        "no_failure": "PASS"
+      },
+      "retries_required": false,
+      "failure_occurred": false,
+      "selected_model": "claude-sonnet-4-20250514",
+      "failed_models": [],
+      "raw_response_path": "outputs/raw_response_20260605T031551Z.json",
+      "error": null
+    },
+    {
+      "case": "high risk",
+      "prompt": "Summarize this incident note and classify the risk level: checkout down and payments failed for multiple customers.",
+      "status": "PASS",
+      "checks": {
+        "tool_execution": "PASS",
+        "schema_validation": "PASS",
+        "output_structure": "PASS",
+        "no_failure": "PASS"
+      },
+      "retries_required": false,
+      "failure_occurred": false,
+      "selected_model": "claude-sonnet-4-20250514",
+      "failed_models": [],
+      "raw_response_path": "outputs/raw_response_20260605T031557Z.json",
+      "error": null
+    },
+    {
+      "case": "ambiguous input",
+      "prompt": "Summarize this incident note and classify the risk level: something feels slower than usual.",
+      "status": "PASS",
+      "checks": {
+        "tool_execution": "PASS",
+        "schema_validation": "PASS",
+        "output_structure": "PASS",
+        "no_failure": "PASS"
+      },
+      "retries_required": false,
+      "failure_occurred": false,
+      "selected_model": "claude-sonnet-4-20250514",
+      "failed_models": [],
+      "raw_response_path": "outputs/raw_response_20260605T031602Z.json",
+      "error": null
+    },
+    {
+      "case": "irrelevant input",
+      "prompt": "Summarize this incident note and classify the risk level: what is a transformer attention head?",
+      "status": "FAIL",
+      "checks": {
+        "tool_execution": "FAIL",
+        "schema_validation": "FAIL",
+        "output_structure": "FAIL",
+        "no_failure": "FAIL"
+      },
+      "retries_required": false,
+      "failure_occurred": true,
+      "selected_model": "claude-sonnet-4-20250514",
+      "failed_models": [],
+      "raw_response_path": "outputs/raw_response_20260605T031606Z.json",
+      "error": "Structured output error: Expecting value: line 1 column 1 (char 0)"
+    }
+  ]
+}
