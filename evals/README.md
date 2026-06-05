@@ -84,6 +84,41 @@ Each case records:
 
 The runner also saves raw API responses through the existing `assistant.save_raw_response` function.
 
+## Current Saved Run
+
+`evals/results/eval_results_20260605T031606Z.json` records a local run of `evals/sample_inputs.json`.
+
+The saved run reports:
+
+- 5 total cases.
+- 4 passing cases.
+- 1 failing case.
+- No retries required.
+- Selected model: `claude-sonnet-4-20250514`.
+- No failed fallback models.
+
+Passing cases:
+
+- `low risk`
+- `medium risk`
+- `high risk`
+- `ambiguous input`
+
+Failing case:
+
+- `irrelevant input`
+
+Failure evidence:
+
+- Prompt: `Summarize this incident note and classify the risk level: what is a transformer attention head?`
+- Tool execution: `FAIL`
+- Schema validation: `FAIL`
+- Output structure: `FAIL`
+- No failure: `FAIL`
+- Error: `Structured output error: Expecting value: line 1 column 1 (char 0)`
+
+This failure is useful evidence. It shows that the current prompt and parser can fail when the input is not an incident-style request.
+
 ## Limitations
 
 - The runner calls the Anthropic API, so results depend on network access, credentials, model availability, and API behavior.
@@ -92,3 +127,4 @@ The runner also saves raw API responses through the existing `assistant.save_raw
 - The tool is keyword-based, so risk classification can miss wording or over-classify text.
 - The sample input file currently contains a small set of manual prompts.
 - Retries are recorded only as required or not required.
+- The current saved run includes one irrelevant-input failure and does not attempt to repair it.
