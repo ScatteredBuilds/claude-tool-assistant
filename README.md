@@ -4,6 +4,15 @@ A small controlled Claude assistant that demonstrates API calls, one local tool,
 
 This is a practical AI engineering exercise. It is intentionally small and inspectable.
 
+## Best Evidence
+
+- `schemas.py` validates the final structured output with Pydantic.
+- `logger.py` appends run-level JSONL logs with input, tool use, output path, selected model, failed models, and errors.
+- `assistant.py` includes retry handling for transient API failures.
+- `assistant.py` includes model fallback behavior for unavailable configured models.
+- `evals/README.md` documents the evaluation method and the saved 4/5 evaluation result.
+- `evals/results/eval_results_20260605T031606Z.json` preserves the documented irrelevant-input failure.
+
 ## Why this exists
 
 This repo is a small Claude API exercise for practicing tool calls, structured response validation, retry and error paths, and runtime logging in one inspectable script.
