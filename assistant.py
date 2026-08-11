@@ -15,12 +15,10 @@ from schemas import AssistantResult
 from tools import classify_risk
 
 
-DEFAULT_MODEL = "claude-sonnet-4-20250514"
+DEFAULT_MODEL = "claude-sonnet-4-6"
 FALLBACK_MODELS = [
-    "claude-sonnet-4-20250514",
-    "claude-3-7-sonnet-20250219",
-    "claude-3-5-sonnet-20241022",
-    "claude-3-haiku-20240307",
+    "claude-sonnet-4-6",
+    "claude-haiku-4-5-20251001",
 ]
 MAX_RETRIES = 2
 

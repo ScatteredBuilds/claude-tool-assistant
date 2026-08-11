@@ -84,9 +84,9 @@ Each case records:
 
 The runner also saves raw API responses through the existing `assistant.save_raw_response` function.
 
-## Current Saved Run
+## Historical Saved Run
 
-`evals/results/eval_results_20260605T031606Z.json` records a local run of `evals/sample_inputs.json`.
+`evals/results/eval_results_20260605T031606Z.json` records a local run of `evals/sample_inputs.json`. It used `claude-sonnet-4-20250514`, which has since been retired, so these results are historical evidence and should not be treated as results for the model currently configured in `assistant.py`.
 
 The saved run reports:
 
@@ -94,7 +94,7 @@ The saved run reports:
 - 4 passing cases.
 - 1 failing case.
 - No retries required.
-- Selected model: `claude-sonnet-4-20250514`.
+- Selected model: `claude-sonnet-4-20250514` (now retired).
 - No failed fallback models.
 
 Passing cases:
@@ -128,3 +128,4 @@ This failure is useful evidence. It shows that the current prompt and parser can
 - The sample input file currently contains a small set of manual prompts.
 - Retries are recorded only as required or not required.
 - The current saved run includes one irrelevant-input failure and does not attempt to repair it.
+- Rerun the cases before comparing behavior after a model change; do not transfer the saved pass rate to a different model.
