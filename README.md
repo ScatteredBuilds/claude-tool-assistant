@@ -72,9 +72,9 @@ API-backed eval:
 python evals/run_evals.py
 ```
 
-For every prompt, the runner checks tool execution, JSON structure, Pydantic validation, and completion without an error. It records retries, selected and failed models, raw output paths, and pass/fail status.
+For every prompt, the runner checks tool execution, JSON structure, Pydantic validation, and completion without an error. These are workflow-contract checks; they do not measure summary quality or risk-classification accuracy. The runner records retries, selected and failed models, raw output paths, and pass/fail status.
 
-The committed run in `evals/results/` reports 4/5 passing cases using the now-retired `claude-sonnet-4-20250514`. The irrelevant-input case failed because the model did not follow the incident-oriented tool/JSON flow. This historical result has not been relabeled as a result for the updated model; rerun the eval with credentials before making comparisons. See [evals/README.md](evals/README.md).
+The committed historical run in `evals/results/` reports 4/5 workflow-contract checks passing with the now-retired `claude-sonnet-4-20250514`. The irrelevant-input case failed because the model did not follow the incident-oriented tool/JSON flow. That result does not establish classification accuracy and has not been relabeled as a result for the updated model; rerun the eval with credentials before making comparisons. See [evals/README.md](evals/README.md).
 
 ## Limitations
 
