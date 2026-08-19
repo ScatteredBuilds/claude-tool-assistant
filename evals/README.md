@@ -43,6 +43,7 @@ The runner does not measure:
 
 - answer quality
 - semantic correctness of the summary
+- risk-classification accuracy
 - model intelligence
 - production readiness
 - long-term reliability
