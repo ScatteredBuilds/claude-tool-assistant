@@ -15,10 +15,10 @@ ANTHROPIC_MODEL=claude-3-5-haiku-20241022 .venv/bin/python assistant.py "Summari
 Output:
 
 ```text
-[local-user]/Documents/Codex/2026-05-11/github-plugin-github-openai-curated-you/claude-tool-assistant/assistant.py:56: DeprecationWarning: The model 'claude-3-5-haiku-20241022' is deprecated and will reach end-of-life on February 19th, 2026.
+assistant.py:56: DeprecationWarning: The model 'claude-3-5-haiku-20241022' is deprecated and will reach end-of-life on February 19th, 2026.
 Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information.
   return client.messages.create(**kwargs)
-[local-user]/Documents/Codex/2026-05-11/github-plugin-github-openai-curated-you/claude-tool-assistant/assistant.py:56: DeprecationWarning: The model 'claude-sonnet-4-20250514' is deprecated and will reach end-of-life on June 15th, 2026.
+assistant.py:56: DeprecationWarning: The model 'claude-sonnet-4-20250514' is deprecated and will reach end-of-life on June 15th, 2026.
 Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information.
   return client.messages.create(**kwargs)
 Failed models: claude-3-5-haiku-20241022
